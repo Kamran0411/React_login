@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { Eye, EyeOff, LogIn, Mail, Lock, AlertCircle } from "lucide-react";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth } from "../firebase"; // update the path if needed
+import { useNavigate } from "react-router-dom";
 
 interface LoginFormProps {
   email: string;
@@ -31,13 +34,28 @@ const LoginForm: React.FC<LoginFormProps> = ({
   const onSubmitHandler = (e: React.FormEvent) => {
     e.preventDefault();
     handleSubmit(e);
+  };
+  const navigate = useNavigate();
 
+  const handleGoogleSignIn = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      console.log("Google Sign-In success:", user);
+      navigate("/welcome");
+    } catch (error: any) {
+      if (error.code === "auth/popup-closed-by-user") {
+        console.warn("User closed the popup.");
+        return;
+      }
+      console.error("Google Sign-In failed:", error);
+      alert(`Google Sign-In failed: ${error.message}`);
+    }
   };
 
   return (
     <form onSubmit={onSubmitHandler} className="form">
-      
-
       <div className="form-group">
         <label>Email Address</label>
         <div className="input-container">
@@ -134,7 +152,11 @@ const LoginForm: React.FC<LoginFormProps> = ({
       </div>
 
       <div className="social-buttons">
-        <a href="#" className="social-button google-button">
+        <button
+          type="button"
+          className="social-button google-button"
+          onClick={handleGoogleSignIn}
+        >
           <svg viewBox="0 0 24 24" width="18" height="18">
             <path
               fill="#4285F4"
@@ -153,7 +175,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
               d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
             />
           </svg>
-        </a>
+        </button>
         <a href="#" className="social-button facebook-button">
           <svg viewBox="0 0 24 24" width="18" height="18">
             <path

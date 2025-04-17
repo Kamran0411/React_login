@@ -10,6 +10,9 @@ import {
   Phone,
 } from "lucide-react";
 import React, { ChangeEvent } from "react";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth } from "../firebase"; // update the path if needed
+import { useNavigate } from "react-router-dom";
 interface RegisterFormProps {
   name: string;
   setName: (value: string) => void;
@@ -32,6 +35,8 @@ interface RegisterFormProps {
   mobileNumber: string;
   setMobileNumber: (value: string) => void;
   successMessage: string;
+  acceptTerms: boolean;
+  setAcceptTerms: (value: boolean) => void;
 }
 
 const RegisterForm: React.FC<RegisterFormProps> = ({
@@ -56,10 +61,32 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
   error,
   handleSubmit,
   successMessage,
+  acceptTerms,
+  setAcceptTerms,
 }) => {
   const handleDateChange = (e: ChangeEvent<HTMLInputElement>) => {
     const inputDate = e.target.value; // This will be in the format YYYY-MM-DD
-    setDateOfBirth(inputDate); // Update the state with the YYYY-MM-DD format
+    setDateOfBirth(inputDate);
+    // Update the state with the YYYY-MM-DD format
+  };
+  const navigate = useNavigate();
+
+  const handleGoogleSignIn = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      console.log("Google Sign-In success:", user);
+      navigate("/welcome"); // or any route you want to send them to
+    } catch (error: any) {
+      if (error.code === "auth/popup-closed-by-user") {
+        console.warn("User closed the popup — no need to show alert.");
+        return; // Don't show anything
+      }
+
+      console.error("Google Sign-In failed:", error);
+      alert(`Google Sign-In failed: ${error.message}`);
+    }
   };
 
   return (
@@ -207,6 +234,28 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
           {successMessage}
         </div>
       )}
+      <div className="form-options">
+        <div className="checkbox">
+          <input
+            id="terms"
+            type="checkbox"
+            checked={acceptTerms}
+            onChange={(e) => setAcceptTerms(e.target.checked)}
+            required
+          />
+          <label htmlFor="terms" style={{ color: "#d1d5db" }}>
+            I accept the{" "}
+            <a
+              href="/terms"
+              className="link"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              terms and conditions
+            </a>
+          </label>
+        </div>
+      </div>
 
       <button type="submit" disabled={isLoading} className="submit-button">
         {isLoading ? (
@@ -237,9 +286,10 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
         <span>Or continue with</span>
       </div>
       <div className="social-buttons">
-        <a
-          href="https://www.google.com/"
+        <button
+          type="button"
           className="social-button google-button"
+          onClick={handleGoogleSignIn}
         >
           <svg viewBox="0 0 24 24" width="18" height="18">
             <path
@@ -259,7 +309,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
               d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
             />
           </svg>
-        </a>
+        </button>
         <a
           href="https://www.google.com/"
           className="social-button facebook-button"

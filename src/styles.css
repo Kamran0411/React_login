@@ -503,17 +503,7 @@ input[type="tel"] {
 }
 
 /* Welcome Page Styling */
-.welcome-page {
-  min-height: 100vh;
-  width: 100%;
-  background-image: url('https://unsplash.com/photos/new-york-city-skyline-at-sunset-is-stunning-kNNJAN2jpTI');
-  background-size: cover;
-  background-position: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
+
 
 .welcome-overlay {
   position: absolute;
@@ -590,10 +580,11 @@ input[type="tel"] {
   font-weight: 500;
 }
 .welcome-page {
-  background-image: url('https://source.unsplash.com/1600x900/?nature,forest');
+  min-height: 100vh;
+  width: 100%;
+  background-image: url('/public/Welcome_page.jpg');
   background-size: cover;
   background-position: center;
-  height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -601,15 +592,19 @@ input[type="tel"] {
   color: white;
   text-align: center;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+  padding: 20px;
 }
 
 .welcome-message {
   font-size: 2.5rem;
   margin-bottom: 1.5rem;
-  background-color: rgba(255, 255, 255, 0.1); /* transparent white bg */
+  /* background-color: rgba(255, 255, 255, 0.1);
   padding: 1rem 2rem;
   border-radius: 8px;
-  backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px); */
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+
 }
 
 .logout-button {
@@ -647,3 +642,4 @@ input[type="tel"] {
       transform: rotate(360deg);
     }
   }
+  

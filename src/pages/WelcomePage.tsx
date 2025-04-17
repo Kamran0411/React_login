@@ -27,8 +27,9 @@ const WelcomePage: React.FC = () => {
   return (
     <div className="welcome-page">
       <h1 className="welcome-message">
-        Welcome {user?.displayName || user?.email}, you have logged in!
+        Welcome {user?.displayName}, you have logged in!
       </h1>
+
       <button className="logout-button" onClick={handleLogout}>
         Logout
       </button>

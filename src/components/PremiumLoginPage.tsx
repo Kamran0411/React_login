@@ -10,6 +10,7 @@ import RegisterForm from "./RegisterForm";
 import SuccessMessage from "./SuccessMessage";
 import { Fingerprint } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { updateProfile } from "firebase/auth";
 
 const PremiumLoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -28,6 +29,7 @@ const PremiumLoginPage: React.FC = () => {
   const [mobileNumber, setMobileNumber] = useState<string>("");
   const [dateOfBirth, setDateOfBirth] = useState<string>("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [acceptTerms, setAcceptTerms] = useState<boolean>(false);
 
   useEffect(() => {
     if (!password) {
@@ -105,6 +107,10 @@ const PremiumLoginPage: React.FC = () => {
       setError("Please use a stronger password");
       return;
     }
+    if (!acceptTerms) {
+      setError("You must accept the terms and conditions");
+      return;
+    }
 
     try {
       setIsLoading(true);
@@ -114,6 +120,12 @@ const PremiumLoginPage: React.FC = () => {
         email,
         password
       );
+      if (auth.currentUser) {
+        await updateProfile(auth.currentUser, {
+          displayName: name,
+        });
+        await auth.currentUser.reload();
+      }
       const user = userCredential.user;
       console.log("User created:", user);
 
@@ -228,6 +240,8 @@ const PremiumLoginPage: React.FC = () => {
             handleSubmit={handleSubmit}
             dateOfBirth={dateOfBirth}
             successMessage={successMessage}
+            acceptTerms={acceptTerms}
+            setAcceptTerms={setAcceptTerms}
           />
         )}
       </div>
