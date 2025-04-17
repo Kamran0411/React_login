@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-# React_login
+
 =======
 # Getting Started with Create React App
 

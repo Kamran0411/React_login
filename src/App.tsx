@@ -1,11 +1,15 @@
-import PremiumLoginPage from './components/PremiumLoginPage';
-import './styles.css';
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import PremiumLoginPage from "./components/PremiumLoginPage";
+import WelcomePage from "./pages/WelcomePage";
+import "./styles.css";
 
 const App: React.FC = () => {
   return (
-    <div>
-      <PremiumLoginPage />
-    </div>
+    <Routes>
+      <Route path="/" element={<PremiumLoginPage />} />
+      <Route path="/welcome" element={<WelcomePage />} />
+    </Routes>
   );
 };
 
